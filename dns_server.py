@@ -1,7 +1,9 @@
-import socket
-import sys
 
-DNS_TABLE = {
+
+
+import socket
+
+dns_table = {
     "www.google.com": "142.250.190.68",
     "www.yahoo.com": "98.137.11.163",
     "www.dypitpune.edu.in": "192.168.1.100",
@@ -9,37 +11,17 @@ DNS_TABLE = {
     "142.250.190.68": "www.google.com"
 }
 
-HOST = 'localhost'
-PORT = 12345
-BUFFER_SIZE = 1024
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server.bind(('localhost', 12345))
 
-def start_dns_server():
-  
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+print("DNS Server started... waiting for queries")
 
-    try:
-        server_socket.bind((HOST, PORT))
-        print(f"[*] DNS Server started on {HOST}:{PORT}")
-        print("[*] Press Ctrl+C to stop the server.")
-
-        while True:
-            data, addr = server_socket.recvfrom(BUFFER_SIZE)
-            
-            query = data.decode().strip()
-            print(f"\nReceived query: '{query}' from {addr}")
-
-            response = DNS_TABLE.get(query, "No record found")
-            
-            server_socket.sendto(response.encode(), addr)
-            print(f"Sent response: '{response}'")
-
-    except KeyboardInterrupt:
-        print("\n[!] Server stopping...")
-    except Exception as e:
-        print(f"\n[!] An error occurred: {e}")
-    finally:
-        server_socket.close()
-        print("[*] Socket closed.")
-
-if __name__ == "__main__":
-    start_dns_server()
+while True:
+    data, addr = server.recvfrom(1024)
+    query = data.decode()
+    print(f"Received query: {query}")
+    
+    response = dns_table.get(query, "No record found")
+    server.sendto(response.encode(), addr)
+    
+    print(f"Sent response: {response}\n")

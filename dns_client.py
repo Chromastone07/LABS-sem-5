@@ -1,15 +1,18 @@
+
 import socket
 
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_address = ('localhost', 12345)
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 while True:
-    message = input("Enter domain or IP to resolve (or 'exit'): ")
-    if message.lower() == 'exit':
+    query = input("\nEnter Hostname or IP (or 'exit' to quit): ")
+    if query.lower() == 'exit':
         break
-        
-    client_socket.sendto(message.encode(), server_address)
-    data, _ = client_socket.recvfrom(1024)
-    print(f"Server Response: {data.decode()}")
+    
+    client.sendto(query.encode(), server_address)
+    
+    data, _ = client.recvfrom(1024)
+    print("Resolved Address:", data.decode())
 
-client_socket.close()
+client.close()
+print("Client closed.")
