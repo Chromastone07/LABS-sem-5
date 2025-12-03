@@ -1,30 +1,22 @@
-# Hamming (7,4) encoder + decoder with error injection and correction
-# Save as hamming7_4.py and run: python hamming7_4.py
+
 
 def encode_7_4(data_bits):
-    # data_bits: list of 4 ints [d1,d2,d3,d4]
     d1, d2, d3, d4 = data_bits
-    # parity bits (using positions 1,2,4)
-    p1 = d1 ^ d2 ^ d4        # parity covering positions 1,3,5,7 => d1,d2,d4
-    p2 = d1 ^ d3 ^ d4        # parity covering positions 2,3,6,7 => d1,d3,d4
-    p4 = d2 ^ d3 ^ d4        # parity covering positions 4,5,6,7 => d2,d3,d4
-    # Construct Hamming code in order positions 1..7: p1 p2 d1 p4 d2 d3 d4
+    p1 = d1 ^ d2 ^ d4        
+    p2 = d1 ^ d3 ^ d4        
+    p4 = d2 ^ d3 ^ d4        
     code = [p1, p2, d1, p4, d2, d3, d4]
     return code
 
 def syndrome_for(code):
-    # code: list of 7 ints (positions 1..7)
     p1, p2, d1, p4, d2, d3, d4 = code
-    # compute parity checks (same groups as encoder)
-    s1 = p1 ^ d1 ^ d2 ^ d4   # parity for positions 1,3,5,7
-    s2 = p2 ^ d1 ^ d3 ^ d4   # parity for positions 2,3,6,7
-    s4 = p4 ^ d2 ^ d3 ^ d4   # parity for positions 4,5,6,7
-    # syndrome bits form binary number s = s4 s2 s1 (weight: 4,2,1)
+    s1 = p1 ^ d1 ^ d2 ^ d4  
+    s2 = p2 ^ d1 ^ d3 ^ d4   
+    s4 = p4 ^ d2 ^ d3 ^ d4  
     syndrome = (s4 << 2) | (s2 << 1) | s1
     return syndrome, (s1, s2, s4)
 
 def flip_bit(code, position):
-    # position: 1-based index 1..7 to flip
     idx = position - 1
     code[idx] = 0 if code[idx] == 1 else 1
 
@@ -40,11 +32,9 @@ def main():
     data = input_4bits()
     print("Data bits (d1 d2 d3 d4):", " ".join(map(str, data)))
 
-    # Encode
     code = encode_7_4(data)
     print("Encoded Hamming (positions 1..7):", " ".join(map(str, code)))
 
-    # Option: inject error
     choice = input("\nDo you want to inject an error? (y/n) [n]: ").strip().lower() or "n"
     if choice == "y":
         mode = input("Choose 'm' manual flip or 'r' random flip [r]: ").strip().lower() or "r"
@@ -64,21 +54,18 @@ def main():
     else:
         print("No error injected. Transmitted code is clean.")
 
-    # Receiver side: compute syndrome
     syndrome, (s1, s2, s4) = syndrome_for(code)
     print("\nReceiver computes syndrome bits (s1,s2,s4):", s1, s2, s4)
     if syndrome == 0:
         print("Syndrome = 0 -> No error detected.")
-        corrected = code[:]  # no change
+        corrected = code[:] 
     else:
         print("Syndrome (decimal) =", syndrome, "-> Error at position", syndrome)
-        # Correct the bit
         corrected = code[:]
         flip_bit(corrected, syndrome)
         print("Corrected code:", " ".join(map(str, corrected)))
 
-    # Extract original data bits from corrected code
-    # corrected positions: [p1,p2,d1,p4,d2,d3,d4]
+    
     d1 = corrected[2]
     d2 = corrected[4]
     d3 = corrected[5]
