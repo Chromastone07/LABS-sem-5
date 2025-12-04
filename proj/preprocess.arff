@@ -1,0 +1,15 @@
+@relation preprocess
+
+
+@attribute Age numeric
+@attribute Income numeric 
+@attribute Student {yes,no}
+@attribute Credit_Rating {fair, excellent}
+@attribute Buys_Computer {yes,no}
+
+@data 
+25,40,no,fair,no
+28,50,no,excellent,no
+35,60,no,fair,no
+45,30,yes,fair,yes
+?,20,yes,excellent,no

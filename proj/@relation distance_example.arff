@@ -1,0 +1,10 @@
+@relation distance_example
+
+@attribute object {A,B,C}
+@attribute X numeric
+@attribute Y numeric
+
+@data
+A,1,2
+B,2,4
+C,3,5

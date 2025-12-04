@@ -1,0 +1,12 @@
+@relation tennis
+
+@attribute outlook {sunny,overcast,rain}
+@attribute wind {weak,strong}
+@attribute play {yes,no}
+
+@data
+sunny,weak,no
+sunny,strong,no
+overcast,weak,yes
+rain,weak,yes
+rain,strong,no

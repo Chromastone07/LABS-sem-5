@@ -1,0 +1,13 @@
+@relation fpgrowth
+
+@attribute bread {yes,no}
+@attribute milk {yes,no}
+@attribute butter {yes,no}
+@attribute jam {yes,no}
+
+@data
+yes,yes,no,no
+yes,no,yes,no
+no,yes,yes,yes
+yes,yes,yes,no
+no,no,yes,yes

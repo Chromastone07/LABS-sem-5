@@ -1,0 +1,11 @@
+@relation buy
+@attribute Age {young,adult,old}
+@attribute Student {yes,no}
+@attribute Buy {yes,no}
+
+@data
+young,yes,yes
+young,no,no
+adult,yes,yes
+old,yes,yes
+old,no,no
